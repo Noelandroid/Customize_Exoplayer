@@ -1,20 +1,27 @@
 package noel.example.com.customizeexoplayer;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MotionEventCompat;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.PictureInPictureParams;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.Rational;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -68,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
    PlayerView playerView;
     ProgressBar progressBar;
-    ImageView btfullscreen,btvolume,btbright;
+    ImageView btfullscreen,btvolume,btbright,btpip;
     SimpleExoPlayer simpleExoPlayer;
 
 
@@ -114,6 +121,9 @@ public class MainActivity extends AppCompatActivity {
     private AudioManager audio;
     private boolean checkVolume = true;
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+    ActionBar actionBar;
+
 
 
 
@@ -129,11 +139,46 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         playerView=findViewById(R.id.player_view);
         progressBar=findViewById(R.id.progress_bar);
         btfullscreen=findViewById(R.id.bt_fullscreen);
         btvolume=findViewById(R.id.volume);
         btbright=findViewById(R.id.bright);
+        btpip=findViewById(R.id.btn_minimize);
+        actionBar = getActionBar();
+
+
+        btpip.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View view)
+            {
+                Display d = getWindowManager()
+                        .getDefaultDisplay();
+                Point p = new Point();
+                d.getSize(p);
+                int width = p.x;
+                int height = p.y;
+
+                Rational ratio
+                        = new Rational(width, height);
+                PictureInPictureParams.Builder
+                        pip_Builder
+                        = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    pip_Builder = new PictureInPictureParams
+                    .Builder();
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    pip_Builder.setAspectRatio(ratio).build();
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    enterPictureInPictureMode(pip_Builder.build());
+                }
+            }
+        });
+
 
 
 
@@ -302,6 +347,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+
+
+
+
+
+
+
 
     public static void setColor(String s) {
         color = s;

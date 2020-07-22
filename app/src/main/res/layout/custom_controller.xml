@@ -12,6 +12,18 @@
        android:layout_height="match_parent">
 
 
+
+       <ImageButton
+           android:id="@+id/btn_minimize"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="top|start"
+           android:layout_margin="16dp"
+           android:background="?selectableItemBackgroundBorderless"
+           android:src="@drawable/ic_picture_in_picture_alt_black_24dp"
+           android:tint="@android:color/white" />
+
+
        <ImageView
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
@@ -179,6 +191,10 @@
 
 
     </LinearLayout>
+
+
+
+
     
 
 
